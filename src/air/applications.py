@@ -3,12 +3,12 @@ Instantiating Air applications.
 """
 
 import inspect
+import warnings
 from collections.abc import Callable, Sequence
 from enum import Enum
 from functools import wraps
 from types import FunctionType
 from typing import Annotated, Any, Literal, TypeVar
-from warnings import deprecated
 
 from fastapi import FastAPI, routing
 from fastapi.params import Depends
@@ -79,14 +79,16 @@ class Air(FastAPI):
                 A list of routes to serve incoming HTTP and WebSocket requests.
                 """
             ),
-            deprecated(
+            warnings.warn(
                 """
                 You normally wouldn't use this parameter with FastAPI, it is inherited
                 from Starlette and supported for compatibility.
 
                 In FastAPI, you normally would use the *path operation methods*,
                 like `app.get()`, `app.post()`, etc.
-                """
+                """,
+                DeprecationWarning,
+                stacklevel=2,
             ),
         ] = None,
         servers: Annotated[
